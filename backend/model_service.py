@@ -7,7 +7,6 @@ MODELS_DIR = BASE_DIR / "models"
 vectorizer = joblib.load(MODELS_DIR / "vectorizer.pkl")
 lr = joblib.load(MODELS_DIR / "logistic.pkl")
 dt = joblib.load(MODELS_DIR / "decision_tree.pkl")
-rf = joblib.load(MODELS_DIR / "random_forest.pkl")
 gb = joblib.load(MODELS_DIR / "gradient_boost.pkl")
 
 import re
@@ -37,16 +36,14 @@ def predict_news(text):
     # Probability of class 1 (Real News)
     lr_prob = float(lr.predict_proba(transformed_text)[0][1]) * 100
     dt_prob = float(dt.predict_proba(transformed_text)[0][1]) * 100
-    rf_prob = float(rf.predict_proba(transformed_text)[0][1]) * 100
     gb_prob = float(gb.predict_proba(transformed_text)[0][1]) * 100
 
     # Ensemble score
     overall_score = (
         lr_prob +
         dt_prob +
-        rf_prob +
         gb_prob
-    ) / 4
+    ) / 3
 
     # Final verdict
     verdict = (
@@ -61,7 +58,6 @@ def predict_news(text):
         "models": {
             "logistic_regression": round(lr_prob, 2),
             "decision_tree": round(dt_prob, 2),
-            "random_forest": round(rf_prob, 2),
             "gradient_boost": round(gb_prob, 2)
         }
     }
@@ -69,7 +65,6 @@ def predict_news(text):
     return {
         "lr": round(lr_prob * 100, 2),
         "dt": round(dt_prob * 100, 2),
-        "rf": round(rf_prob * 100, 2),
         "gb": round(gb_prob * 100, 2)
     }
 

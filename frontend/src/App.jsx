@@ -108,11 +108,6 @@ function App() {
           </p>
 
           <p>
-            Random Forest:{" "}
-            {result.models.random_forest}%
-          </p>
-
-          <p>
             Gradient Boost:{" "}
             {result.models.gradient_boost}%
           </p>

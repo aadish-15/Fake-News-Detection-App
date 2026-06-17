@@ -147,11 +147,15 @@ http://localhost:5173
 * Modern dashboard visualizations
 * Containerization using Docker
 
----
+## Application Preview
 
-## Screenshots
+### Home Screen
 
-Add screenshots of the application UI here after deployment.
+![Home Screen](screenshots/homepage.png)
+
+### Prediction Result
+
+![Prediction Result](screenshots/prediction-result.png)
 
 ---
 

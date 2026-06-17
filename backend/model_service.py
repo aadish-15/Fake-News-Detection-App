@@ -33,39 +33,58 @@ def predict_news(text):
     # Convert to TF-IDF features
     transformed_text = vectorizer.transform([cleaned_text])
 
-    # Probability of class 1 (Real News)
+    # Probability of Real News (class = 1)
     lr_prob = float(lr.predict_proba(transformed_text)[0][1]) * 100
     dt_prob = float(dt.predict_proba(transformed_text)[0][1]) * 100
     gb_prob = float(gb.predict_proba(transformed_text)[0][1]) * 100
 
-    # Ensemble score
+    # Ensemble Score
     overall_score = (
         lr_prob +
         dt_prob +
         gb_prob
     ) / 3
 
-    # Final verdict
+    # Verdict
     verdict = (
         "Likely Real"
         if overall_score >= 50
         else "Likely Fake"
     )
 
+    # Confidence Level
+    distance = abs(overall_score - 50)
+
+    if distance >= 40:
+        confidence = "Very High"
+    elif distance >= 25:
+        confidence = "High"
+    elif distance >= 10:
+        confidence = "Medium"
+    else:
+        confidence = "Low"
+
+    # Model Agreement
+    votes = [
+        lr_prob >= 50,
+        dt_prob >= 50,
+        gb_prob >= 50
+    ]
+
+    agreement_count = max(
+        votes.count(True),
+        votes.count(False)
+    )
     return {
         "overall_score": round(overall_score, 2),
         "verdict": verdict,
+        "confidence": confidence,
+        "agreement": f"{agreement_count}/3",
         "models": {
             "logistic_regression": round(lr_prob, 2),
             "decision_tree": round(dt_prob, 2),
             "gradient_boost": round(gb_prob, 2)
         }
-    }
-
-    return {
-        "lr": round(lr_prob * 100, 2),
-        "dt": round(dt_prob * 100, 2),
-        "gb": round(gb_prob * 100, 2)
     }
 
 print("Models loaded successfully")
